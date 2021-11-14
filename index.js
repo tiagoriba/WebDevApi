@@ -17,19 +17,26 @@ async function configureBrowser() {
           ]
       });
     const page = await browser.newPage();
-    await page.goto('https://www.pcdiga.com/imagem-e-som/monitores?z_screen_refresh=6867&product_list_order=price');
+    await page.goto('https://www.pcdiga.com/#/embedded/query=asus', {
+        waitUntil: 'networkidle0',
+      });
     return page;
 }
 
+const searchResults = [];
 
 app.get('/', async (req, res) => {
     let page = await configureBrowser();
 
     let html = await page.evaluate(() => document.body.innerHTML);
-    console.log(html);
-   
-    res.send(html);
-
+    
+    const $ = cheerio.load(html);
+    $('div[class="df-card"]',html).each(function (index, element) {
+        console.log($(element).html());
+        var title = $(this).find('.df-card__title').text();
+        searchResults.push(title);
+    }) 
+    res.json(searchResults);
     //res.json('Welcome');
     /* axios.get('https://www.pcdiga.com').then((response) => {
         const html = response.data;
