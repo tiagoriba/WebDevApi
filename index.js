@@ -13,22 +13,20 @@ app.get('/', (req, res) => {
         const html = response.data;
         console.log(html);
     }) */
-
-    cloudscraper.get('https://www.pccomponentes.pt/buscar/?query=monitor').then((body) => {
+    console.log("hello patricia");
+    /* cloudscraper.get('https://www.pccomponentes.pt/buscar/?query=monitor').then((body) => {
         res.json(body);
         const $ = cheerio.load(body);
         //console.log($.html());
         
         /* $('[data-list="search results"]').each(() => {
             console.log( 'dwqdqw');
-        }) */
-        $('a').each(() => {
-            console.log( $(this).attr('href') );
         }) 
+       
     }); 
-
+ */
 })
 
 app.listen(PORT , () => {
-    
+    console.log(`Server running on PORT ${PORT}`);
 })
