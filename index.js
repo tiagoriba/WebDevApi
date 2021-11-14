@@ -1,4 +1,5 @@
 const PORT = 8000;
+const puppeteer = require('puppeteer');
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -6,14 +7,34 @@ const cheerio = require('cheerio');
  
 const app = express();
 
+async function configureBrowser() {
+    const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+        args : [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+          ]
+      });
+    const page = await browser.newPage();
+    await page.goto('https://www.pcdiga.com/imagem-e-som/monitores?z_screen_refresh=6867&product_list_order=price');
+    return page;
+}
 
-app.get('/', (req, res) => {
+
+app.get('/', async (req, res) => {
+    let page = await configureBrowser();
+
+    let html = await page.evaluate(() => document.body.innerHTML);
+    console.log(html);
+   
+    res.send(html);
+
     //res.json('Welcome');
     /* axios.get('https://www.pcdiga.com').then((response) => {
         const html = response.data;
         console.log(html);
     }) */
-    console.log("hello patricia");
     /* cloudscraper.get('https://www.pccomponentes.pt/buscar/?query=monitor').then((body) => {
         res.json(body);
         const $ = cheerio.load(body);
